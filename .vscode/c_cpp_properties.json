@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "CUDA",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/local/cuda-13.3/include"
+            ],
+            "compilerPath": "/usr/local/cuda-13.3/bin/nvcc",
+            "intelliSenseMode": "linux-gcc-x64",
+            "cStandard": "c17",
+            "cppStandard": "c++20"
+        }
+    ],
+    "version": 4
+}

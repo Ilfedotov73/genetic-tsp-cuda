@@ -9,8 +9,9 @@ namespace core {
         int id_;
         math::point_2_8_t p_;
     public:
-        __host__ __device__ city_2_12_t() : id_(-1), p_() {}
-        __host__ __device__ city_2_12_t(int id, math::point_2_8_t p) : id_(id), p_(p) {}
+        __host__ __device__ city_2_12_t() noexcept : id_(-1), p_() {} // p_{NAN;NAN}
+        __host__ __device__ city_2_12_t(int id, const math::point_2_8_t &p) : id_(id), p_(p) {}
+        __host__ __device__ city_2_12_t(const city_2_12_t &city) : id_(city.id_), p_(city.p_) {}
 
         __host__ __device__ int get_id() const {
             return id_;

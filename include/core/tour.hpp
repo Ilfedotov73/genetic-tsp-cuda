@@ -10,7 +10,7 @@ namespace core {
         size_t tour_size_;
         city_2_12_t *citieslist_;
 
-        manage_memory::allocator<city_2_12_t> alloc_;
+        manage_memory::unified_allocator<city_2_12_t> alloc_;
         
         float distance_ = -1;
         float fitness_ = -1;
@@ -36,7 +36,7 @@ namespace core {
             tour_size_ = new_size;
         }
     public:
-        __host__ __device__ tour_2_20_t() : tour_size_(-1), citieslist_(nullptr) {}
+        __host__ __device__ tour_2_20_t() noexcept : tour_size_(-1), citieslist_(nullptr) {}
         __host__ __device__ tour_2_20_t(size_t tour_size) : tour_size_(tour_size), citieslist_(nullptr) {
             citieslist_ = alloc_.allocate(tour_size_);
         }     
@@ -54,7 +54,7 @@ namespace core {
         __host__ __device__ float get_fitness() const {
             return fitness_;
         }
-        __host__ __device__ const city_2_12_t *const get_const_cities_ptr() const {
+        __host__ __device__ const city_2_12_t *const get_data() const {
             return citieslist_;
         }
 
@@ -118,7 +118,7 @@ namespace core {
             << "Tour fitness value: " << tour.get_fitness() << '\n' 
             << "Cities list:\n";
         for (size_t i = 0; i < s; ++i) {
-            out << tour.get_const_cities_ptr()[i] << '\n';
+            out << tour.get_data()[i] << '\n';
         }
         return out;
     }
@@ -136,8 +136,8 @@ namespace core {
         }
 
         size_t s = ltour.get_size();
-        const city_2_12_t *lcity_ptr = ltour.get_const_cities_ptr();
-        const city_2_12_t *rcity_ptr = rtour.get_const_cities_ptr();
+        const city_2_12_t *lcity_ptr = ltour.get_data();
+        const city_2_12_t *rcity_ptr = rtour.get_data();
         for (size_t i = 0; i < s; ++i) {
             if (lcity_ptr[i] != rcity_ptr[i]) {
                 return false;
@@ -145,4 +145,8 @@ namespace core {
         }
         return true;
     } 
+
+    __host__ __device__ inline bool operator<(const tour_2_20_t &ltour, const tour_2_20_t &rtour) {
+        return(ltour.get_fitness() > rtour.get_fitness());
+    }
 }

@@ -6,9 +6,6 @@
 *.cubin
 *.fatbin
 
-# Visual Studio Code 
-.vscode
-
 # Prerequisites
 *.d
 

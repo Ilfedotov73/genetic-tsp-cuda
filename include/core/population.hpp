@@ -10,7 +10,7 @@ namespace core {
         size_t pop_size_;
         tour_2_20_t *tourlist_;
 
-        manage_memory::allocator<tour_2_20_t> alloc_;
+        manage_memory::unified_allocator<tour_2_20_t> alloc_;
     
         __host__ __device__ void resize(size_t new_size) 
         {
@@ -33,7 +33,7 @@ namespace core {
             pop_size_ = new_size;
         }
     public:
-        __host__ __device__ population_2_28_t() : pop_size_(-1), tourlist_(nullptr) {}
+        __host__ __device__ population_2_28_t() noexcept : pop_size_(-1), tourlist_(nullptr) {}
         __host__ __device__ population_2_28_t(size_t pop_size) : pop_size_(pop_size), tourlist_(nullptr) {
             tourlist_ = alloc_.allocate(pop_size_);
         }
@@ -57,7 +57,7 @@ namespace core {
         __host__ __device__ size_t get_size() const {
             return pop_size_;
         }
-        __host__ __device__ const tour_2_20_t *const get_const_pop_ptr() const {
+        __host__ __device__ const tour_2_20_t *const get_data() const {
             return tourlist_;
         } 
 
@@ -78,7 +78,7 @@ namespace core {
             << " * Population size: " << pop.get_size() << '\n'
             << " * Populaton composition:\n";
         for (size_t i = 0; i < size; ++i) {
-            out << " * * "<< pop.get_const_pop_ptr()[i] << '\n';
+            out << " * * "<< pop.get_data()[i] << '\n';
         }   
         return out;      
     }
@@ -90,8 +90,8 @@ namespace core {
         }
 
         size_t s = lpop.get_size();
-        const tour_2_20_t *ltour_ptr = lpop.get_const_pop_ptr();
-        const tour_2_20_t *rtour_ptr = rpop.get_const_pop_ptr();
+        const tour_2_20_t *ltour_ptr = lpop.get_data();
+        const tour_2_20_t *rtour_ptr = rpop.get_data();
         for (size_t i = 0; i < s ;++i) {
             if (ltour_ptr[i] != rtour_ptr[i]) {
                 return false;
