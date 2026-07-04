@@ -3,6 +3,7 @@
         {
             "name": "CUDA",
             "includePath": [
+                "${workspaceFolder}",
                 "${workspaceFolder}/**",
                 "/usr/local/cuda-13.3/include"
             ],
