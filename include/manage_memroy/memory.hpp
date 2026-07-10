@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <cuda_runtime.h>
 
-namespace manage_memory {
+namespace cugtsp_manage_memory {
     template <typename T> struct unified_allocator {
         using value_type = T;
         using pointer = value_type*;
@@ -52,5 +52,26 @@ namespace manage_memory {
     template <typename T, typename U>
     __host__ __device__ inline bool operator==(unified_allocator<T> const &left, unified_allocator<U> const &right) {
         return true;
+    }
+}
+
+namespace cugtsp_memory {
+    template <typename T>
+    __host__ inline void cumalloc(T **dev_ptr, size_t count) 
+    {
+        cudaError_t err;
+        err = cudaMalloc(dev_ptr, count);
+        if (err != cudaSuccess) {
+            std::runtime_error{cudaGetErrorString(err)};
+        }
+    }
+    template <typename T>
+    __host__ inline void cumemcpy(T *dst, const T *src, size_t count, cudaMemcpyKind kind)
+    {
+        cudaError_t err;
+        err = cudaMemcpy(dst, src, count, kind);
+        if (err != cudaSuccess) {
+            std::runtime_error{cudaGetErrorString(err)};
+        }
     }
 }

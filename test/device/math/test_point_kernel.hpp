@@ -2,22 +2,18 @@
 
 namespace device_test {
     void test_point_default_constructor(float *out_x, float *out_y);
-    void test_point_param_constructor(float x, float y, float *out_x, float *out_y);
-
-    /*
-    void test_point_copy_constructor(const math::point_2_8_t *src, float *out_x, float *out_y);
-    void test_point_get(const math::point_2_8_t *src, float *out_x, float *out_y);
-    void test_point_unary_minus(const math::point_2_8_t *src, float *out_x, float *out_y);
-    void test_point_assignment(const math::point_2_8_t *src, float *out_x, float *out_y);
-    void test_point_minus_equal(const math::point_2_8_t *src_a, const math::point_2_8_t *src_b, 
-                                    float *out_x, float *out_y);
-    void test_point_plus_equal(const math::point_2_8_t *src_a, const math::point_2_8_t *src_b,
-                                    float *out_x, float *out_y);
-    void test_point_mult_equal(const math::point_2_8_t *src_a, const math::point_2_8_t *src_b,
-                                    float *out_x, float *out_y);
-    void test_point_div_equal(const math::point_2_8_t *src_a, const math::point_2_8_t *src_b,
-                                    float *out_x, float *out_y);
-    void test_point_valid(const math::point_2_8_t *src, bool *valid);
-
-    */
+    void test_point_param_constructor(float src_x, float src_y, float *out_x, float *out_y);
+    void test_point_copy_constructor(float src_x, float src_y, float *out_x, float *out_y);
+    void test_point_get(float src_x, float src_y, float *out_x, float *out_y);
+    void test_point_unary_minus(float src_x, float src_y, float *out_x, float *out_y);
+    void test_point_assignment(float src_x, float src_y, float *out_x, float *out_y);
+    void test_point_minus_point(float src_ax, float src_ay, float src_bx, float src_by, 
+                                float *out_x, float *out_y);
+    void test_point_plus_point(float src_ax, float src_ay, float src_bx, float src_by, 
+                               float *out_x, float *out_y);
+    void test_point_mult_point(float src_ax, float src_ay, float src_bx, float src_by, 
+                               float *out_x, float *out_y);
+    void test_point_div_point(float src_ax, float src_ay, float src_bx, float src_by, 
+                              float *out_x, float *out_y);
+    // void test_point_valid(const cugtsp_math::point_2_8_t *src, bool *valid);
 }

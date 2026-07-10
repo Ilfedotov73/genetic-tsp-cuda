@@ -10,7 +10,7 @@ namespace core {
         size_t tour_size_;
         city_2_12_t *citieslist_;
 
-        manage_memory::unified_allocator<city_2_12_t> alloc_;
+        cugtsp_manage_memory::unified_allocator<city_2_12_t> alloc_;
         
         float distance_ = -1;
         float fitness_ = -1;
@@ -80,7 +80,7 @@ namespace core {
 
             distance_ = 0;
             for (size_t i = 1; i < tour_size_; ++i) {
-                distance_ += math::distance(citieslist_[i - 1].get_pos(), citieslist_[i].get_pos());
+                distance_ += cugtsp_math::distance(citieslist_[i - 1].get_pos(), citieslist_[i].get_pos());
             }
         }
 

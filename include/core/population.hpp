@@ -10,7 +10,7 @@ namespace core {
         size_t pop_size_;
         tour_2_20_t *tourlist_;
 
-        manage_memory::unified_allocator<tour_2_20_t> alloc_;
+        cugtsp_manage_memory::unified_allocator<tour_2_20_t> alloc_;
     
         __host__ __device__ void resize(size_t new_size) 
         {

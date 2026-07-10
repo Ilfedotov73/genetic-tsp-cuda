@@ -2,12 +2,13 @@
 
 #include <iostream>
 
-namespace math {
+namespace cugtsp_math {
     class alignas(8) point_2_8_t {
         float x_, y_;
     public:
         __host__ __device__ point_2_8_t() noexcept : x_(NAN), y_(NAN) {}        
         __host__ __device__ point_2_8_t(float x, float y) noexcept : x_(x), y_(y) {}
+        __host__ __device__ point_2_8_t(const point_2_8_t &p) : x_(p.x_), y_(p.y_) {}
         
         __host__ __device__ float x() const { 
             return x_; 
