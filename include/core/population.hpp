@@ -3,14 +3,16 @@
 #include <iostream>
 
 #include "tour.hpp"
-#include "include/manage_memroy/memory.hpp"
+#include "include/memory/cumem.hpp"
+
+using namespace cu_gtsp;
 
 namespace core {
     class alignas(32) population_2_28_t {
         size_t pop_size_;
         tour_2_20_t *tourlist_;
 
-        cugtsp_manage_memory::unified_allocator<tour_2_20_t> alloc_;
+        cu_alloc::unified_allocator<tour_2_20_t> alloc_;
     
         __host__ __device__ void resize(size_t new_size) 
         {

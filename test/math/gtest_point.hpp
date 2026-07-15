@@ -62,20 +62,22 @@ namespace point_test_device {
     
     TEST(Point_2_8_Test, TestPointMinusEqual)
     {
-        float x = 12.0f, y = 13.0f;
+        float ax = 12.0f, ay = 13.0f;
+        float bx = 12.1f, by = 13.0f;
         float out_x, out_y;
-        test_point_minus_equal(x, y, &out_x, &out_y);
-        EXPECT_FLOAT_EQ(out_x, x -= x);
-        EXPECT_FLOAT_EQ(out_y, y -= y);
+        test_point_minus_equal(ax, ay, bx, by, &out_x, &out_y);
+        EXPECT_FLOAT_EQ(out_x, ax -= bx);
+        EXPECT_FLOAT_EQ(out_y, ay -= by);
     }
 
     TEST(Point_2_8_Test, TestPointPlusEqual)
     {
-        float x = 12.0f, y = 13.0f;
+        float ax = 12.0f, ay = 13.0f;
+        float bx = 12.1f, by = 13.1f;
         float out_x, out_y;
-        test_point_plus_equal(x, y, &out_x, &out_y);
-        EXPECT_FLOAT_EQ(out_x, x += x);
-        EXPECT_FLOAT_EQ(out_y, y += y);
+        test_point_plus_equal(ax, ay, bx, by, &out_x, &out_y);
+        EXPECT_FLOAT_EQ(out_x, ax + bx);
+        EXPECT_FLOAT_EQ(out_y, ay + by);
     }
 
     TEST(Point_2_8_Test, TestPointScalarMutl)
@@ -135,10 +137,73 @@ namespace point_test_device {
         EXPECT_FLOAT_EQ(out_x, ax / bx);
         EXPECT_FLOAT_EQ(out_y, ay / by);
     }
-}
 
-int start_point_test(int argc, char **argv) {
-    std::cerr << "\033[32m[Start point tests]\033[0m" << '\n';
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    TEST(Point_2_8_Test, TestPointFalseValid)
+    {
+        float x = 13.0f, y = NAN;
+        bool valid;
+        point_test_device::test_point_valid(x, y, &valid);
+        EXPECT_FALSE(valid);
+    }
+
+    TEST(Point_2_8_Test, TestPointTrueValid)
+    {
+        float x = 12.0f, y = 13.0f;
+        bool valid;
+        point_test_device::test_point_valid(x, y, &valid);
+        EXPECT_TRUE(valid);   
+    }
+
+    TEST(Point_2_8_Test, TestPointMultScalar)
+    {
+        float x = 12.0f, y = 13.0f , t = 5.0f;
+        float out_x, out_y;
+        test_point_mult_scalar(x, y, t, &out_x, &out_y);
+        EXPECT_FLOAT_EQ(out_x, x * t);
+        EXPECT_FLOAT_EQ(out_y, y * t);
+    }
+
+    TEST(Point_2_8_Test, TestPointDivScalar)
+    {
+        float x = 12.0f, y = 13.0f , t = 5.0f;
+        float out_x, out_y;
+        test_point_div_scalar(x, y, t, &out_x, &out_y);
+        EXPECT_FLOAT_EQ(out_x, x / t);
+        EXPECT_FLOAT_EQ(out_y, y / t);
+    }
+
+    TEST(Point_2_8_Test, TestPointFalseEquality)
+    {
+        bool equality;
+        float ax = 12.0f, ay = 13.0f;
+        float bx = 12.0f, by = 13.1f;
+        test_point_equality(ax, ay, bx, by, &equality);
+        EXPECT_FALSE(equality);
+    }
+
+    TEST(Point_2_8_Test, TestPointTrueEquality)
+    {
+        bool equality;
+        float ax = 12.0f, ay = 13.0f;
+        float bx = 12.0f, by = 13.0f;
+        test_point_equality(ax, ay, bx, by, &equality);
+        EXPECT_TRUE(equality);
+    }
+
+    // A - (0,0) B - (0,2) -> dist = 2
+    TEST(Point_2_8_Test, TestPointDistance)
+    {
+        float dist;
+        float ax = 0.0f, ay = 0.0f;
+        float bx = 0.0f, by = 2.0f; 
+        test_point_distaince(ax, ay, bx, by, &dist);
+        EXPECT_FLOAT_EQ(dist, 2.0f); 
+    }
+
+    //-----------------TEST_INPUT------------------------------------
+    int start_point_test(int argc, char **argv) {
+        std::cerr << "\033[32m[Start point tests]\033[0m" << '\n';
+        ::testing::InitGoogleTest(&argc, argv);
+        return RUN_ALL_TESTS();
+    }
 }

@@ -3,14 +3,16 @@
 #include <iostream>
 
 #include "city.hpp"
-#include "include/manage_memroy/memory.hpp"
+#include "include/memory/cumem.hpp"
+
+using namespace cu_gtsp;
 
 namespace core {
     class tour_2_20_t {
         size_t tour_size_;
         city_2_12_t *citieslist_;
 
-        cugtsp_manage_memory::unified_allocator<city_2_12_t> alloc_;
+        cu_alloc::unified_allocator<city_2_12_t> alloc_;
         
         float distance_ = -1;
         float fitness_ = -1;

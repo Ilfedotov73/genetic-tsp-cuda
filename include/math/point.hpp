@@ -10,10 +10,10 @@ namespace cugtsp_math {
         __host__ __device__ point_2_8_t(float x, float y) noexcept : x_(x), y_(y) {}
         __host__ __device__ point_2_8_t(const point_2_8_t &p) : x_(p.x_), y_(p.y_) {}
         
-        __host__ __device__ float x() const { 
+        __host__ __device__ const float &x() const { 
             return x_; 
         }
-        __host__ __device__ float y() const { 
+        __host__ __device__ const float &y() const { 
             return y_; 
         }
         
@@ -61,29 +61,29 @@ namespace cugtsp_math {
     __host__ __device__ inline point_2_8_t operator-(const point_2_8_t &u, const point_2_8_t &v)
     {
         return point_2_8_t(
-            u.x() - v.x(),
-            u.y() - v.y()
+            u.x_ - v.x_,
+            u.y_ - v.y_
         );
     }
     __host__ __device__ inline point_2_8_t operator+(const point_2_8_t &u, const point_2_8_t &v)
     {
         return point_2_8_t(
-            u.x() + v.x(),
-            u.y() + v.y()
+            u.x_ + v.x_,
+            u.y_ + v.y_
         );
     }
     __host__ __device__ inline point_2_8_t operator*(const point_2_8_t &u, const point_2_8_t &v)
     {
         return point_2_8_t(
-            u.x() * v.x(),
-            u.y() * v.y()
+            u.x_ * v.x_,
+            u.y_ * v.y_
         );
     }
     __host__ __device__ inline point_2_8_t operator*(float t, const point_2_8_t &u)
     {
         return point_2_8_t(
-            u.x() * t, 
-            u.y() * t
+            u.x_ * t, 
+            u.y_ * t
         );
     }
     __host__ __device__ inline point_2_8_t operator*(const point_2_8_t &u, float t) {
@@ -92,25 +92,25 @@ namespace cugtsp_math {
     __host__ __device__ inline point_2_8_t operator/(const point_2_8_t &u, const point_2_8_t &v)
     {
         return point_2_8_t(
-            u.x() / v.x(),
-            u.y() / v.y()
+            u.x_ / v.x_,
+            u.y_ / v.y_
         );
     }
     __host__ __device__ inline point_2_8_t operator/(const point_2_8_t &u, float t) {
         return (1.0f / t) * u;
     }
     __host__ __device__ inline bool operator==(const point_2_8_t &u, const point_2_8_t &v) {
-        return ((u.x() == v.x()) && (u.y() == v.y()));
+        return ((u.x_ == v.x_) && (u.y_ == v.y_));
     }
 
     __host__ __device__ inline float distance(const point_2_8_t &u, const point_2_8_t &v)
     {
-        float dx = u.x() - v.x();
-        float dy = u.y() - v.y();
+        float dx = u.x_ - v.x_;
+        float dy = u.y_ - v.y_;
         return(sqrtf(dx * dx + dy * dy));
     }
 
     __host__ inline std::ostream &operator<<(std::ostream &out, const point_2_8_t &p) {
-        return out << '(' << p.x() << ';' << p.y() << ')' << std::endl;
+        return out << '(' << p.x_ << ';' << p.y_ << ')' << std::endl;
     }
 }
