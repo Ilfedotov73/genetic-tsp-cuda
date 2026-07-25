@@ -17,7 +17,7 @@ __global__ void testPointDefaultConstructorDevice(float *dev_x, float *dev_y)
         *dev_y = p.y_;
     }
 }
-void point_test_device::test_point_default_constructor(float *out_x, float *out_y)
+void point_test_device::test_point_default_constructor(float &out_x, float &out_y)
 {
     float *dev_x, *dev_y;
     cu_mem::cumalloc<float>(&dev_x, sizeof(float));
@@ -30,8 +30,8 @@ void point_test_device::test_point_default_constructor(float *out_x, float *out_
         std::runtime_error{cudaGetErrorString(err)};
     }
     
-    cu_mem::cumemcpy<float>(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy<float>(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_x);
     cudaFree(dev_y);
@@ -45,7 +45,7 @@ __global__ void testPointParamConstructorDevice(float src_x, float src_y, float 
         *dev_y = p.y_;
     }
 }
-void point_test_device::test_point_param_constructor(float src_x, float src_y, float *out_x, float *out_y)
+void point_test_device::test_point_param_constructor(float src_x, float src_y, float &out_x, float &out_y)
 {
     float *dev_x, *dev_y;
     cu_mem::cumalloc<float>(&dev_x, sizeof(float));
@@ -58,8 +58,8 @@ void point_test_device::test_point_param_constructor(float src_x, float src_y, f
         std::runtime_error{cudaGetErrorString(err)};
     }
     
-    cu_mem::cumemcpy<float>(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy<float>(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
     
     cudaFree(dev_x);
     cudaFree(dev_y);
@@ -73,7 +73,7 @@ __global__ void testPointCopyConstructorDevice(const cugtsp_math::point_2_8_t *d
         *dev_y = p.y_;
     }
 }
-void point_test_device::test_point_copy_constructor(float src_x, float src_y, float *out_x, float *out_y)
+void point_test_device::test_point_copy_constructor(float src_x, float src_y, float &out_x, float &out_y)
 {    
     cugtsp_math::point_2_8_t src(src_x, src_y);
     
@@ -92,8 +92,8 @@ void point_test_device::test_point_copy_constructor(float src_x, float src_y, fl
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy<float>(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy<float>(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src);
     cudaFree(dev_x);
@@ -107,7 +107,7 @@ __global__ void testPointGetDevice(const cugtsp_math::point_2_8_t *dev_src, floa
         *dev_y = dev_src->y();
     }
 }
-void point_test_device::test_point_get(float src_x, float src_y, float *out_x, float *out_y)
+void point_test_device::test_point_get(float src_x, float src_y, float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src(src_x, src_y);
 
@@ -127,8 +127,8 @@ void point_test_device::test_point_get(float src_x, float src_y, float *out_x, f
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy<float>(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy<float>(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy<float>(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_x);
     cudaFree(dev_y);
@@ -141,7 +141,7 @@ __global__ void testPointUnaryMinusDevice(cugtsp_math::point_2_8_t *dev_src, flo
         *dev_y = -(*dev_src).y_;
     }
 }
-void point_test_device::test_point_unary_minus(float src_x, float src_y, float *out_x, float *out_y)
+void point_test_device::test_point_unary_minus(float src_x, float src_y, float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src(src_x, src_y);
 
@@ -160,8 +160,8 @@ void point_test_device::test_point_unary_minus(float src_x, float src_y, float *
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 }
 
 __global__ void testPointAssignmentDevice(const cugtsp_math::point_2_8_t *dev_src, cugtsp_math::point_2_8_t *p, 
@@ -173,7 +173,7 @@ __global__ void testPointAssignmentDevice(const cugtsp_math::point_2_8_t *dev_sr
         *dev_y = p->y_;
     }
 }
-void point_test_device::test_point_assignment(float src_x, float src_y, float *out_x, float *out_y)
+void point_test_device::test_point_assignment(float src_x, float src_y, float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src(src_x, src_y);
 
@@ -193,8 +193,8 @@ void point_test_device::test_point_assignment(float src_x, float src_y, float *o
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src);
     cudaFree(dev_x);
@@ -211,7 +211,7 @@ __global__ void testPointMinusEqualDevice(cugtsp_math::point_2_8_t *dev_src, con
     }
 }
 void point_test_device::test_point_minus_equal(float src_ax, float src_ay, float src_bx, float src_by,
-                                               float *out_x, float *out_y)
+                                               float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src(src_ax, src_ay), p(src_bx, src_by);
 
@@ -232,8 +232,8 @@ void point_test_device::test_point_minus_equal(float src_ax, float src_ay, float
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src);
     cudaFree(dev_p);
@@ -251,7 +251,7 @@ __global__ void testPointPlusEqualDevice(cugtsp_math::point_2_8_t *dev_src, cons
     }
 }
 void point_test_device::test_point_plus_equal(float src_ax, float src_ay, float src_bx, float src_by, 
-                                              float *out_x, float *out_y)
+                                              float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src(src_ax, src_ay), p(src_bx, src_by);
 
@@ -272,8 +272,8 @@ void point_test_device::test_point_plus_equal(float src_ax, float src_ay, float 
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src);
     cudaFree(dev_p);
@@ -289,7 +289,7 @@ __global__ void testPointScalarMultEqualDevice(cugtsp_math::point_2_8_t *dev_src
         *dev_y = dev_src->y_;
     }
 }
-void point_test_device::test_point_scalar_mult(float src_x, float src_y, float t, float *out_x, float *out_y)
+void point_test_device::test_point_scalar_mult(float src_x, float src_y, float t, float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src(src_x, src_y);
     
@@ -308,8 +308,8 @@ void point_test_device::test_point_scalar_mult(float src_x, float src_y, float t
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src);
     cudaFree(dev_x);
@@ -324,7 +324,7 @@ __global__ void testPointScalarDivEqualDevice(cugtsp_math::point_2_8_t *dev_src,
         *dev_y = dev_src->y_;
     }
 }
-void point_test_device::test_point_scalar_div(float src_x, float src_y, float t, float *out_x, float *out_y)
+void point_test_device::test_point_scalar_div(float src_x, float src_y, float t, float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src(src_x, src_y);
     
@@ -343,8 +343,8 @@ void point_test_device::test_point_scalar_div(float src_x, float src_y, float t,
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src);
     cudaFree(dev_x);
@@ -361,7 +361,7 @@ __global__ void testPointMinusPointDevice(const cugtsp_math::point_2_8_t *dev_sr
     }
 }
 void point_test_device::test_point_minus_point(float src_ax, float src_ay, float src_bx, float src_by, 
-                                         float *out_x, float *out_y)
+                                               float &out_x, float &out_y)
 {   
     cugtsp_math::point_2_8_t src_a(src_ax, src_ay), src_b(src_bx, src_by);
 
@@ -382,8 +382,8 @@ void point_test_device::test_point_minus_point(float src_ax, float src_ay, float
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src_a);
     cudaFree(dev_src_b);
@@ -401,7 +401,7 @@ __global__ void testPointPlusPointDevice(const cugtsp_math::point_2_8_t *dev_src
     }
 }
 void point_test_device::test_point_plus_point(float src_ax, float src_ay, float src_bx, float src_by, 
-                                              float *out_x, float *out_y)
+                                              float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src_a(src_ax, src_ay), src_b(src_bx, src_by);
 
@@ -422,8 +422,8 @@ void point_test_device::test_point_plus_point(float src_ax, float src_ay, float 
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src_a);
     cudaFree(dev_src_b);
@@ -441,7 +441,7 @@ __global__ void testPointMultPointDevice(const cugtsp_math::point_2_8_t *dev_src
     }
 }
 void point_test_device::test_point_mult_point(float src_ax, float src_ay, float src_bx, float src_by, 
-                                              float *out_x, float *out_y)
+                                              float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src_a(src_ax, src_ay), src_b(src_bx, src_by);
 
@@ -462,8 +462,8 @@ void point_test_device::test_point_mult_point(float src_ax, float src_ay, float 
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src_a);
     cudaFree(dev_src_b);
@@ -479,7 +479,7 @@ __global__ void testPointMultScalarDevice(const cugtsp_math::point_2_8_t *dev_p,
         *dev_y = p.y_;
     }
 }
-void point_test_device::test_point_mult_scalar(float src_x, float src_y, float t, float *out_x, float *out_y)
+void point_test_device::test_point_mult_scalar(float src_x, float src_y, float t, float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src_p(src_x, src_y);
 
@@ -498,8 +498,8 @@ void point_test_device::test_point_mult_scalar(float src_x, float src_y, float t
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_x);
     cudaFree(dev_y);
@@ -516,7 +516,7 @@ __global__ void testPointDivPointDevice(const cugtsp_math::point_2_8_t *dev_src_
     }
 }
 void point_test_device::test_point_div_point(float src_ax, float src_ay, float src_bx, float src_by, 
-                          float *out_x, float *out_y)
+                                             float &out_x, float &out_y)
 {
     cugtsp_math::point_2_8_t src_a(src_ax, src_ay), src_b(src_bx, src_by);
 
@@ -537,8 +537,8 @@ void point_test_device::test_point_div_point(float src_ax, float src_ay, float s
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_src_a);
     cudaFree(dev_src_b);
@@ -554,7 +554,7 @@ __global__ void testPointDivScalarDevice(const cugtsp_math::point_2_8_t *dev_p, 
         *dev_y = p.y_;
     }
 } 
-void point_test_device::test_point_div_scalar(float src_x, float src_y, float t, float *out_x, float *out_y)
+void point_test_device::test_point_div_scalar(float src_x, float src_y, float t, float &out_x, float &out_y)
 {
     float *dev_x, *dev_y;
     cu_mem::cumalloc(&dev_x, sizeof(float));
@@ -572,8 +572,8 @@ void point_test_device::test_point_div_scalar(float src_x, float src_y, float t,
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
-    cu_mem::cumemcpy(out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_x, dev_x, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_y, dev_y, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_x);
     cudaFree(dev_y);
@@ -587,7 +587,7 @@ __global__ void testPointValidDevice(const cugtsp_math::point_2_8_t *dev_p, bool
     }
 }
 
-void point_test_device::test_point_valid(float src_x, float src_y, bool *out_valid)
+void point_test_device::test_point_valid(float src_x, float src_y, bool &out_valid)
 {
     cugtsp_math::point_2_8_t src_p(src_x, src_y);
 
@@ -605,7 +605,7 @@ void point_test_device::test_point_valid(float src_x, float src_y, bool *out_val
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_valid, dev_valid, sizeof(bool), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_valid, dev_valid, sizeof(bool), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_p);
     cudaFree(dev_valid);
@@ -618,7 +618,7 @@ __global__ void testPointEqualityDevice(const cugtsp_math::point_2_8_t *dev_pa, 
         *dev_pa == *dev_pb ?  *dev_equal = true : *dev_equal = false;
     }
 }
-void point_test_device::test_point_equality(float src_ax, float src_ay, float src_bx, float src_by, bool *out_equal)
+void point_test_device::test_point_equality(float src_ax, float src_ay, float src_bx, float src_by, bool &out_equal)
 {
     cugtsp_math::point_2_8_t src_pa(src_ax, src_ay), src_pb(src_bx, src_by);
 
@@ -638,7 +638,7 @@ void point_test_device::test_point_equality(float src_ax, float src_ay, float sr
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_equal, dev_equal, sizeof(bool), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_equal, dev_equal, sizeof(bool), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_pa);
     cudaFree(dev_pb);
@@ -653,7 +653,7 @@ __global__ void testPointDistance(const cugtsp_math::point_2_8_t *dev_a, const c
     }
 }
 void point_test_device::test_point_distaince(float src_ax, float src_ay, float src_bx, float src_by,
-                                             float *out_dist)
+                                             float &out_dist)
 {
     cugtsp_math::point_2_8_t src_a(src_ax, src_ay), src_b(src_bx, src_by);
 
@@ -673,7 +673,7 @@ void point_test_device::test_point_distaince(float src_ax, float src_ay, float s
         std::runtime_error{cudaGetErrorString(err)};
     }
 
-    cu_mem::cumemcpy(out_dist, dev_dist, sizeof(float), cudaMemcpyDeviceToHost);
+    cu_mem::cumemcpy(&out_dist, dev_dist, sizeof(float), cudaMemcpyDeviceToHost);
 
     cudaFree(dev_dist);
 }

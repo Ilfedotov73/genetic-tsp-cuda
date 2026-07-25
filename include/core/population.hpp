@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cstddef> // std::size_t
 
 #include "tour.hpp"
 #include "include/memory/cumem.hpp"
@@ -13,35 +14,68 @@ namespace core {
         tour_2_20_t *tourlist_;
 
         cu_alloc::unified_allocator<tour_2_20_t> alloc_;
+
+        tour_2_20_t *last_value = nullptr;
     
-        __host__ __device__ void resize(size_t new_size) 
+        __host__ __device__ void resize(std::size_t new_size) 
         {
-            tour_2_20_t *tmp = alloc_.allocate(new_size);
+            tour_2_20_t *buffer = alloc_.allocate(new_size);
+            if (!buffer) {
+                return;
+            }
+
             size_t old_size = pop_size_;
+            std::size_t elem_to_cpy = (new_size < old_size) ? new_size : old_size;
 
-            if (new_size <= old_size) {
-                for (size_t i = 0; i < new_size; ++i) {
-                    tmp[i] = tourlist_[i];
-                }
+            for (std::size_t i = 0; i < elem_to_cpy; ++i) {
+                new (&buffer[i]) tour_2_20_t(tourlist_[i]);
             }
-            else { // new_size > old_size.
-                for (size_t i = 0; i < old_size; ++i) {
-                    tmp[i] = tourlist_[i];
-                }
+            for (std::size_t i = elem_to_cpy; i < new_size; ++i) {
+                new (&buffer[i]) tour_2_20_t();
             }
 
-            alloc_.deallocate(tourlist_);
-            tourlist_ = tmp;
+            /* Освабождение старой памяти. */
+            if (tourlist_) { 
+                for (std::size_t i = 0; i < old_size; ++i) {
+                    tourlist_[i].~tour_2_20_t();
+                } 
+                alloc_.deallocate(tourlist_);
+            }
+
+            tourlist_ = buffer;
             pop_size_ = new_size;
         }
     public:
-        __host__ __device__ population_2_28_t() noexcept : pop_size_(-1), tourlist_(nullptr) {}
-        __host__ __device__ population_2_28_t(size_t pop_size) : pop_size_(pop_size), tourlist_(nullptr) {
-            tourlist_ = alloc_.allocate(pop_size_);
+        __host__ __device__ population_2_28_t() noexcept : pop_size_(0), tourlist_(nullptr) {} 
+        __host__ __device__ population_2_28_t(std::size_t pop_size) : pop_size_(pop_size), tourlist_(nullptr)  
+        {
+            tour_2_20_t *buffer = alloc_.allocate(pop_size_);
+            if (buffer) {
+                for (std::size_t i = 0; i < pop_size_; ++i) {
+                    new (&buffer[i]) tour_2_20_t();
+                }
+                tourlist_ = buffer;
+            }
+        }
+        __host__ __device__ population_2_28_t(std::size_t pop_size, std::size_t tour_size) :
+                                              pop_size_(pop_size), tourlist_(nullptr)  
+        {
+            tour_2_20_t *buffer = alloc_.allocate(pop_size_);
+            if (buffer) {
+                for (std::size_t i = 0; i < pop_size_; ++i) {
+                    new (&buffer[i]) tour_2_20_t(tour_size);
+                }
+                tourlist_ = buffer;
+            }   
         }
         __host__ __device__ population_2_28_t(const population_2_28_t &pop) = delete;
         __host__ __device__ ~population_2_28_t() {
             alloc_.deallocate(tourlist_);
+        }
+
+        __host__ __device__ void push_back(const tour_2_20_t &val)
+        {
+            // TODO
         }
 
         __host__ __device__ population_2_28_t &operator=(const population_2_28_t &p)
@@ -56,7 +90,7 @@ namespace core {
             return *this;
         }
 
-        __host__ __device__ size_t get_size() const {
+        __host__ __device__ const size_t &get_size() const {
             return pop_size_;
         }
         __host__ __device__ const tour_2_20_t *const get_data() const {

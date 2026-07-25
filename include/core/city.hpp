@@ -13,10 +13,10 @@ namespace core {
         __host__ __device__ city_2_12_t(int id, const cugtsp_math::point_2_8_t &p) : id_(id), p_(p) {}
         __host__ __device__ city_2_12_t(const city_2_12_t &city) : id_(city.id_), p_(city.p_) {}
 
-        __host__ __device__ int get_id() const {
+        __host__ __device__ const int &get_id() const {
             return id_;
         }
-        __host__ __device__ cugtsp_math::point_2_8_t get_pos() const {
+        __host__ __device__ const cugtsp_math::point_2_8_t &get_pos() const {
             return p_;
         }
 

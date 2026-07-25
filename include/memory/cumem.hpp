@@ -13,6 +13,7 @@ namespace  cu_gtsp {
             using size_type = std::size_t;
     
             unified_allocator() noexcept = default;
+            
             template <typename U> 
             unified_allocator(unified_allocator<U> const& right) noexcept {}
     

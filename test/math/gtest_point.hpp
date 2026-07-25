@@ -10,7 +10,7 @@ namespace point_test_device {
     TEST(Point_2_8_Test, TestPointDefaultConstructorDevice)
     {
         float x = -1.0f, y = -1.0f;
-        test_point_default_constructor(&x, &y);
+        test_point_default_constructor(x, y);
         EXPECT_TRUE(std::isnan(x));
         EXPECT_TRUE(std::isnan(y));
     }
@@ -19,7 +19,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f;
         float out_x, out_y;
-        test_point_param_constructor(x, y, &out_x, &out_y);   
+        test_point_param_constructor(x, y, out_x, out_y);   
         EXPECT_FLOAT_EQ(out_x, x);
         EXPECT_FLOAT_EQ(out_y, y); 
     }
@@ -28,7 +28,7 @@ namespace point_test_device {
     {  
         float x = 12.0f, y = 13.0f;
         float out_x, out_y;
-        test_point_copy_constructor(x, y, &out_x, &out_y);
+        test_point_copy_constructor(x, y, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, x);
         EXPECT_FLOAT_EQ(out_y, y);
     }
@@ -37,7 +37,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f;
         float out_x, out_y;
-        test_point_get(x, y, &out_x, &out_y);
+        test_point_get(x, y, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, x);
         EXPECT_FLOAT_EQ(out_y, y); 
     }
@@ -46,7 +46,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f;
         float out_x, out_y;
-        test_point_unary_minus(x, y, &out_x, &out_y);
+        test_point_unary_minus(x, y, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, -x);
         EXPECT_FLOAT_EQ(out_y, -y);
     }
@@ -55,7 +55,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f;
         float out_x, out_y;
-        test_point_assignment(x, y, &out_x, &out_y);
+        test_point_assignment(x, y, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, x);
         EXPECT_FLOAT_EQ(out_y, y);
     }
@@ -65,7 +65,7 @@ namespace point_test_device {
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.1f, by = 13.0f;
         float out_x, out_y;
-        test_point_minus_equal(ax, ay, bx, by, &out_x, &out_y);
+        test_point_minus_equal(ax, ay, bx, by, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, ax -= bx);
         EXPECT_FLOAT_EQ(out_y, ay -= by);
     }
@@ -75,7 +75,7 @@ namespace point_test_device {
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.1f, by = 13.1f;
         float out_x, out_y;
-        test_point_plus_equal(ax, ay, bx, by, &out_x, &out_y);
+        test_point_plus_equal(ax, ay, bx, by, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, ax + bx);
         EXPECT_FLOAT_EQ(out_y, ay + by);
     }
@@ -84,7 +84,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f, t = 5.0f;
         float out_x, out_y;
-        test_point_scalar_mult(x, y, t, &out_x, &out_y);
+        test_point_scalar_mult(x, y, t, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, x *= t);
         EXPECT_FLOAT_EQ(out_y, y *= t);
     }
@@ -93,7 +93,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f, t = 5.0f;
         float out_x, out_y;
-        test_point_scalar_div(x, y, t, &out_x, &out_y);
+        test_point_scalar_div(x, y, t, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, x /= t);
         EXPECT_FLOAT_EQ(out_y, y /= t);
     }
@@ -103,7 +103,7 @@ namespace point_test_device {
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.1f, by = 13.1f;
         float out_x, out_y;
-        test_point_minus_point(ax, ay, bx, by, &out_x, &out_y);
+        test_point_minus_point(ax, ay, bx, by, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, ax - bx);
         EXPECT_FLOAT_EQ(out_y, ay - by);
     }
@@ -113,7 +113,7 @@ namespace point_test_device {
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.1f, by = 13.1f;
         float out_x, out_y;
-        test_point_plus_point(ax, ay, bx, by, &out_x, &out_y);
+        test_point_plus_point(ax, ay, bx, by, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, ax + bx);
         EXPECT_FLOAT_EQ(out_y, ay + by);
     }
@@ -123,7 +123,7 @@ namespace point_test_device {
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.1f, by = 13.1f;
         float out_x, out_y;
-        point_test_device::test_point_mult_point(ax, ay, bx, by, &out_x, &out_y);
+        point_test_device::test_point_mult_point(ax, ay, bx, by, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, ax * bx);
         EXPECT_FLOAT_EQ(out_y, ay * by);
     }
@@ -133,7 +133,7 @@ namespace point_test_device {
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.1f, by = 13.1f;
         float out_x, out_y;
-        point_test_device::test_point_div_point(ax, ay, bx, by, &out_x, &out_y);
+        point_test_device::test_point_div_point(ax, ay, bx, by, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, ax / bx);
         EXPECT_FLOAT_EQ(out_y, ay / by);
     }
@@ -142,7 +142,7 @@ namespace point_test_device {
     {
         float x = 13.0f, y = NAN;
         bool valid;
-        point_test_device::test_point_valid(x, y, &valid);
+        point_test_device::test_point_valid(x, y, valid);
         EXPECT_FALSE(valid);
     }
 
@@ -150,7 +150,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f;
         bool valid;
-        point_test_device::test_point_valid(x, y, &valid);
+        point_test_device::test_point_valid(x, y, valid);
         EXPECT_TRUE(valid);   
     }
 
@@ -158,7 +158,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f , t = 5.0f;
         float out_x, out_y;
-        test_point_mult_scalar(x, y, t, &out_x, &out_y);
+        test_point_mult_scalar(x, y, t, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, x * t);
         EXPECT_FLOAT_EQ(out_y, y * t);
     }
@@ -167,7 +167,7 @@ namespace point_test_device {
     {
         float x = 12.0f, y = 13.0f , t = 5.0f;
         float out_x, out_y;
-        test_point_div_scalar(x, y, t, &out_x, &out_y);
+        test_point_div_scalar(x, y, t, out_x, out_y);
         EXPECT_FLOAT_EQ(out_x, x / t);
         EXPECT_FLOAT_EQ(out_y, y / t);
     }
@@ -177,7 +177,7 @@ namespace point_test_device {
         bool equality;
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.0f, by = 13.1f;
-        test_point_equality(ax, ay, bx, by, &equality);
+        test_point_equality(ax, ay, bx, by, equality);
         EXPECT_FALSE(equality);
     }
 
@@ -186,7 +186,7 @@ namespace point_test_device {
         bool equality;
         float ax = 12.0f, ay = 13.0f;
         float bx = 12.0f, by = 13.0f;
-        test_point_equality(ax, ay, bx, by, &equality);
+        test_point_equality(ax, ay, bx, by, equality);
         EXPECT_TRUE(equality);
     }
 
@@ -196,7 +196,7 @@ namespace point_test_device {
         float dist;
         float ax = 0.0f, ay = 0.0f;
         float bx = 0.0f, by = 2.0f; 
-        test_point_distaince(ax, ay, bx, by, &dist);
+        test_point_distaince(ax, ay, bx, by, dist);
         EXPECT_FLOAT_EQ(dist, 2.0f); 
     }
 
