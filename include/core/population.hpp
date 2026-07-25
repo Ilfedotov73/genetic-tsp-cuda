@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cfloat>
 #include <cstddef> // std::size_t
 
 #include "tour.hpp"
@@ -14,88 +15,114 @@ namespace core {
         tour_2_20_t *tourlist_;
 
         cu_alloc::unified_allocator<tour_2_20_t> alloc_;
-
-        tour_2_20_t *last_value = nullptr;
     
-        __host__ __device__ void resize(std::size_t new_size) 
+        __host__ __device__ void deallocate_tourlist()
         {
-            tour_2_20_t *buffer = alloc_.allocate(new_size);
-            if (!buffer) {
-                return;
-            }
-
-            size_t old_size = pop_size_;
-            std::size_t elem_to_cpy = (new_size < old_size) ? new_size : old_size;
-
-            for (std::size_t i = 0; i < elem_to_cpy; ++i) {
-                new (&buffer[i]) tour_2_20_t(tourlist_[i]);
-            }
-            for (std::size_t i = elem_to_cpy; i < new_size; ++i) {
-                new (&buffer[i]) tour_2_20_t();
-            }
-
-            /* Освабождение старой памяти. */
-            if (tourlist_) { 
-                for (std::size_t i = 0; i < old_size; ++i) {
-                    tourlist_[i].~tour_2_20_t();
-                } 
+            if (tourlist_ != nullptr) {
                 alloc_.deallocate(tourlist_);
+                tourlist_ = nullptr;
+            }
+        }
+
+        __host__ __device__ bool resize(std::size_t new_size) 
+        {
+            if (new_size == 0) {
+                deallocate_tourlist();
+                pop_size_ = 0;
+                return false;
             }
 
-            tourlist_ = buffer;
-            pop_size_ = new_size;
+            tour_2_20_t *buffer = alloc_.allocate(new_size);
+            if (buffer) {
+                /**
+                 * Если this->tourlist_ == nullptr и new_size != 0, то функия resize() приведет
+                 * this->tourlist_ в валидное состояние, заполнив его дефолтными значениями.
+                 */
+                std::size_t elem_to_cpy = (tourlist_ != nullptr) ? (
+                    (new_size < pop_size_) ? new_size : pop_size_
+                ) : 0;
+    
+                for (std::size_t i = 0; i < elem_to_cpy; ++i) {
+                    new (&buffer[i]) tour_2_20_t(tourlist_[i]);
+                }
+                for (std::size_t i = elem_to_cpy; i < new_size; ++i) {
+                    new (&buffer[i]) tour_2_20_t();
+                }
+
+                deallocate_tourlist();
+                tourlist_ = buffer;
+                pop_size_ = new_size;
+            }
+            else {
+                return false;
+            }
+            return true;
         }
     public:
         __host__ __device__ population_2_28_t() noexcept : pop_size_(0), tourlist_(nullptr) {} 
         __host__ __device__ population_2_28_t(std::size_t pop_size) : pop_size_(pop_size), tourlist_(nullptr)  
         {
-            tour_2_20_t *buffer = alloc_.allocate(pop_size_);
-            if (buffer) {
+            if (pop_size_ > 0) {
+                tourlist_ = alloc_.allocate(pop_size_);
                 for (std::size_t i = 0; i < pop_size_; ++i) {
-                    new (&buffer[i]) tour_2_20_t();
+                    new (&tourlist_[i]) tour_2_20_t();
                 }
-                tourlist_ = buffer;
             }
         }
         __host__ __device__ population_2_28_t(std::size_t pop_size, std::size_t tour_size) :
                                               pop_size_(pop_size), tourlist_(nullptr)  
         {
-            tour_2_20_t *buffer = alloc_.allocate(pop_size_);
-            if (buffer) {
+            if (pop_size_ > 0) {
+                tourlist_ = alloc_.allocate(pop_size_);
                 for (std::size_t i = 0; i < pop_size_; ++i) {
-                    new (&buffer[i]) tour_2_20_t(tour_size);
+                    new (&tourlist_[i]) tour_2_20_t(tour_size);
                 }
-                tourlist_ = buffer;
-            }   
+            }
         }
-        __host__ __device__ population_2_28_t(const population_2_28_t &pop) = delete;
+        __host__ __device__ population_2_28_t(const population_2_28_t &other) = delete;
         __host__ __device__ ~population_2_28_t() {
-            alloc_.deallocate(tourlist_);
+            deallocate_tourlist();
         }
 
         __host__ __device__ void push_back(const tour_2_20_t &val)
         {
-            // TODO
+            std::size_t old_size = pop_size_;
+            bool is_ok = resize(pop_size_ + 1);
+            if (!is_ok) {
+                return;
+            }
+
+            if (tourlist_ && pop_size_ == old_size + 1) {
+                tourlist_[old_size] = val;
+            }
         }
 
-        __host__ __device__ population_2_28_t &operator=(const population_2_28_t &p)
+        __host__ __device__ const size_t &get_size() const noexcept {
+            return pop_size_;
+        }
+        __host__ __device__ const tour_2_20_t *const get_data() const noexcept {
+            return tourlist_;
+        } 
+
+        __host__ __device__ population_2_28_t &operator=(const population_2_28_t &other)
         {
-            if (pop_size_ != p.pop_size_) {
-                /* Устанавливает новое значение *this.pop_size_ как p.pop_size_. */
-                resize(p.pop_size_);
+            if (this == &other) {
+                return *this;
             }
-            for (size_t i = 0; i < pop_size_; ++i) {
-                tourlist_[i] = p.tourlist_[i];
+            if (pop_size_ != other.pop_size_) {
+                /* Устанавливает новое значение this.pop_size_ как p.pop_size_. */
+                bool is_ok = resize(other.pop_size_);
+                if (!is_ok) {
+                    return *this;
+                }
+            }
+            if (tourlist_) {
+                for (size_t i = 0; i < pop_size_; ++i) {
+                    tourlist_[i] = other.tourlist_[i];
+                }
             }
             return *this;
         }
-
-        __host__ __device__ const size_t &get_size() const {
-            return pop_size_;
-        }
-        __host__ __device__ const tour_2_20_t *const get_data() const {
-            return tourlist_;
-        } 
 
         __host__ void print() const {
             std::cout << "Population:\n" 
@@ -107,7 +134,7 @@ namespace core {
         }
     };
 
-    __host__ __device__ inline std::ostream &operator<<(std::ostream &out, const population_2_28_t &pop)
+    __host__ inline std::ostream &operator<<(std::ostream &out, const population_2_28_t &pop)
     {
         size_t size = pop.get_size();
         out << "Population:\n" 
