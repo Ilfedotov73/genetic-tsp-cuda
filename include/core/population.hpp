@@ -18,7 +18,10 @@ namespace core {
     
         __host__ __device__ void deallocate_tourlist()
         {
-            if (tourlist_ != nullptr) {
+            if (tourlist_) {
+                for (std::size_t i = 0; i < pop_size_; ++i) {
+                    tourlist_[i].~tour_2_20_t();
+                }
                 alloc_.deallocate(tourlist_);
                 tourlist_ = nullptr;
             }
@@ -29,7 +32,7 @@ namespace core {
             if (new_size == 0) {
                 deallocate_tourlist();
                 pop_size_ = 0;
-                return false;
+                return true;
             }
 
             tour_2_20_t *buffer = alloc_.allocate(new_size);
@@ -46,7 +49,7 @@ namespace core {
                     new (&buffer[i]) tour_2_20_t(tourlist_[i]);
                 }
                 for (std::size_t i = elem_to_cpy; i < new_size; ++i) {
-                    new (&buffer[i]) tour_2_20_t();
+                    new (&buffer[i]) tour_2_20_t(1);
                 }
 
                 deallocate_tourlist();
@@ -64,8 +67,10 @@ namespace core {
         {
             if (pop_size_ > 0) {
                 tourlist_ = alloc_.allocate(pop_size_);
-                for (std::size_t i = 0; i < pop_size_; ++i) {
-                    new (&tourlist_[i]) tour_2_20_t();
+                if (tourlist_) {
+                    for (std::size_t i = 0; i < pop_size_; ++i) {
+                        new (&tourlist_[i]) tour_2_20_t(1);
+                    }
                 }
             }
         }
@@ -74,8 +79,10 @@ namespace core {
         {
             if (pop_size_ > 0) {
                 tourlist_ = alloc_.allocate(pop_size_);
-                for (std::size_t i = 0; i < pop_size_; ++i) {
-                    new (&tourlist_[i]) tour_2_20_t(tour_size);
+                if (tourlist_) {
+                    for (std::size_t i = 0; i < pop_size_; ++i) {
+                        new (&tourlist_[i]) tour_2_20_t(tour_size);
+                    }
                 }
             }
         }
